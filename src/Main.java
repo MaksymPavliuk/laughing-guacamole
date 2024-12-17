@@ -1,3 +1,6 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class Main {
     public static void main(String[] args) {
         String lyrics = "In the town where I was born\n" +
@@ -40,8 +43,27 @@ public class Main {
                 "We all live in a yellow submarine\n" +
                 "Yellow submarine, yellow submarine\n";
 
+        String step1 = lyrics.toLowerCase().
+                replace(',', ' ').replace('\n', ' ')
+                .replace('(', ' ').replace(')', ' ');
 
-        
+        Object[] array = step1.split("\\s+");
+        HashMap<Object, Integer> wordCount = new HashMap<>();
+
+        array = Arrays.stream(array).sorted().toArray();
+
+        for (Object s : array){
+            if(wordCount.putIfAbsent(s, 1) != null){
+                wordCount.put(s, wordCount.get(s) + 1);
+            }
+        }
+
+        Map<Integer, List<Object>> answerMap = wordCount.keySet().stream().
+                collect(Collectors.groupingBy(wordCount::get));
+
+        TreeMap<Integer, List<Object>> sorted = new TreeMap<>(answerMap);
+
+        sorted.forEach((a,b) -> System.out.println(a + " " + b));
 
     }
 }
